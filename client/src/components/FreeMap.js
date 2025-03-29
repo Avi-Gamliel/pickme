@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet"; // Import Leaflet for creating custom icons
 import "leaflet/dist/leaflet.css";
+import { io } from 'socket.io-client';
 
 const UpdateMapPosition = ({ position }) => {
   const map = useMap(); // Access the map instance
@@ -11,8 +12,15 @@ const UpdateMapPosition = ({ position }) => {
 
 const FreeMap = () => {
   const [position, setPosition] = useState([51.505, -0.09]); // Default location (London)
+  const socketRef = useRef(null)
 const positionRef  = useRef([])
   useEffect(() => {
+    socketRef.current = io('http://localhost:5000');
+    socketRef.current.on('connect', () => {
+        // setSocketState(true)
+        console.log('Connected to Socket.IO server');
+
+    });
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (location) => {
