@@ -27,7 +27,7 @@ const FreeMap = () => {
     } else {
       console.error("Geolocation is not supported by this browser.");
     }
-  }, []);
+  });
 
   // Create a custom icon using an image from the public folder, without the shadow
   const customIcon = new L.Icon({
