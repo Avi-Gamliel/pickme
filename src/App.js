@@ -1,16 +1,21 @@
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
 import FreeMap from "./components/FreeMap"
+import Login from "./pages/Login"
+import Register from "./pages/Register"
+import ForgotPassword from "./pages/ForgotPassword"
+import ResetPassword from "./pages/ResetPassword"
 
 function App() {
   return (
     <Router>
-      <Switch>
-        <Route path="/register" component={Register} />
-        <Route path="/login" component={Login} />
-        <Route path="/forgotPassword" component={ForgotPassword} />
-        <Route path="/resetPassword" component={ResetPassword} />
-        <Route path="/" component={FreeMap} exact />
-      </Switch>
+      <Routes>
+        <Route path="/register" elements={<Register/>} />
+        <Route path="/login" elements={<Login/>} />
+        <Route path="/forgotPassword" elements={<ForgotPassword/>} />
+        <Route path="/resetPassword" elements={<ResetPassword/>} />
+        <Route path="/" elements={<FreeMap/>} exact />
+      </Routes>
     </Router>
   )
 }
