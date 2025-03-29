@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet"; // Import Leaflet for creating custom icons
 import "leaflet/dist/leaflet.css";
@@ -11,12 +11,13 @@ const UpdateMapPosition = ({ position }) => {
 
 const FreeMap = () => {
   const [position, setPosition] = useState([51.505, -0.09]); // Default location (London)
-
+const positionRef  = useRef([])
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (location) => {
           const { latitude, longitude } = location.coords;
+          positionRef.current = [latitude, longitude]
           setPosition([latitude, longitude]); // Update position state
         },
         (error) => {
@@ -27,7 +28,7 @@ const FreeMap = () => {
     } else {
       console.error("Geolocation is not supported by this browser.");
     }
-  });
+  },[]);
 
   // Create a custom icon using an image from the public folder, without the shadow
   const customIcon = new L.Icon({
@@ -47,14 +48,15 @@ const FreeMap = () => {
   
   return (
     <div style={{ height: "calc(100vh - 200px)", width: "100%" }}>
-      <MapContainer center={position} zoom={13} scrollWheelZoom={true} style={{ height: "100%", width: "100%" }}>
-        <UpdateMapPosition position={position} />
+        {positionRef.current.length >0 && 
+      <MapContainer center={positionRef.current} zoom={13} scrollWheelZoom={true} style={{ height: "100%", width: "100%" }}>
+        <UpdateMapPosition position={positionRef.current} />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
      
      />
-        <Marker position={position} icon={customIcon}> {/* Use the custom icon */}
+        <Marker position={positionRef.current} icon={customIcon}> {/* Use the custom icon */}
           <Popup>
             <strong>אתה כאן!</strong> <br />
             המיקום שלך זוהה.
@@ -68,6 +70,8 @@ const FreeMap = () => {
         </Marker>
        
       </MapContainer>
+        }
+
     </div>
   );
 };
